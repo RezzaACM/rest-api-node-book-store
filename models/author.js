@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const authorSchema = new mongoose.Schema({
+const authorSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -31,4 +32,8 @@ const authorSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model('Author', authorSchema);
+const Author = module.exports = mongoose.model('Author', authorSchema);
+
+module.exports.get = function (callback, limit) {
+    Author.find(callback).limit(limit)
+}
