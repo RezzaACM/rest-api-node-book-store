@@ -22,7 +22,7 @@ if (!db) {
 }
 
 // to send body 
-app.use(bodyParser.json())
+app.use(express.json());
 
 // Router default
 app.get('/', (req, res) => res.status(200).send({
