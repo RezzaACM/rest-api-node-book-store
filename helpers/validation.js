@@ -10,4 +10,16 @@ const authorValidation = (data) => {
     return schema.validate(data)
 }
 
+const bookValidation = (data) => {
+    const schema = Joi.object({
+        title: Joi.string().required(),
+        stock: Joi.number(),
+        available: Joi.boolean(),
+        description: Joi.string().required(),
+        author: Joi.string().required()
+    })
+    return schema.validate(data)
+}
+
 module.exports.authorValidation = authorValidation;
+module.exports.bookValidation = bookValidation;
