@@ -69,3 +69,63 @@ exports.create = async (req, res) => {
         res.status(400).send(err)
     }
 }
+
+
+// Handele update
+exports.update = async (req, res) => {
+    // check id is exist
+    Book.findById(req.params.id, async (err, data) => {
+        if (err) return res.json({
+            status_code: 404,
+            status_message: "id not found!"
+        }, 404);
+
+
+        // title already using
+        const titleExist = await Book.findOne({
+            title: req.body.title
+        })
+        if (titleExist) return res.status(400).send('Title already exists');
+
+        data.title = req.body.title ? req.body.title : data.title;
+        data.stock = req.body.stock;
+        data.available = req.body.available;
+        data.description = req.body.description;
+
+        try {
+            data.save()
+            res.json({
+                status_code: 201,
+                status_message: 'Succes Update New Data',
+                data: data
+            }, 201)
+        } catch (error) {
+            res.status(400).send(err)
+        }
+    })
+}
+
+// Handle delete
+exports.delete = async (req, res) => {
+    Book.remove({
+        _id: req.params.id
+    }, (err, data) => {
+        if (err) return res.status(404).send({
+            status_code: 404,
+            status_message: 'Id not found!'
+        })
+
+        if (data['deletedCount'] === 0) {
+            res.json({
+                status_code: 404,
+                status_message: 'Id not found!'
+            }, 404)
+        } else {
+            res.json({
+                status_code: 200,
+                status_message: "Delete Success!",
+                id: req.params.id
+            }, 200)
+        }
+    })
+}

@@ -92,7 +92,7 @@ exports.update = async (req, res) => {
             data.save()
             res.json({
                 status_code: 201,
-                status_message: 'Succes Update New Ninja',
+                status_message: 'Succes Update New Data',
                 data: data
             }, 201)
         } catch (error) {
