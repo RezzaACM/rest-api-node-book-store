@@ -3,10 +3,11 @@ const authorsController = require('../controllers/authorController');
 const bookController = require('../controllers/bookController');
 const memberController = require('../controllers/memberController');
 const path = require('path');
+const express = require('express');
 const multer = require('multer');
 
 const storage = multer.diskStorage({
-    destination: './uploads/images',
+    destination: './uploads/',
     filename: (req, file, cb) => {
         return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
     }
@@ -47,6 +48,7 @@ router.delete('/book/delete/:id', bookController.delete);
 
 // Member route
 router.get('/members', memberController.index);
-router.post('/member/register', upload.single('avatar'), memberController.create);
+router.post('/member/register', upload.single('profile'), memberController.create);
+
 
 module.exports = router

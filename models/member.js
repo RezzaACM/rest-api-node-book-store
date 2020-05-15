@@ -26,7 +26,7 @@ const memberSchema = new Schema({
         required: true,
         max: 100
     },
-    avatar: {
+    profile: {
         type: String,
         required: true
     },

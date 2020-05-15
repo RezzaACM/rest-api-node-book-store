@@ -1,32 +1,5 @@
 const Member = require('../models/member');
 const bcrypt = require('bcryptjs');
-const multer = require('multer');
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, new Date().toISOString() + file.originalname);
-    }
-});
-
-const fileFilter = (req, file, cb) => {
-    // reject a file
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
-};
-
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 * 5
-    },
-    fileFilter: fileFilter
-});
 
 const {
     registerValidation
@@ -34,21 +7,40 @@ const {
 
 // Handle show list data
 exports.index = (req, res) => {
-    Member.get((err, data) => {
-        try {
-            res.json({
+    Member.find()
+        .select("_id name email password phone address profile")
+        .exec()
+        .then(docs => {
+            const response = {
                 status_code: 200,
-                status_message: 'Data retrieved successfully',
-                data: data
-            }, 200)
-        } catch (error) {
-            res.status(400).send(err)
-        }
-    })
+                status_message: "Data retrived Successfully",
+                count: docs.length,
+                member: docs.map(doc => {
+                    return {
+                        name: doc.name,
+                        email: doc.email,
+                        password: doc.password,
+                        phone: doc.phone,
+                        address: doc.address,
+                        profile: doc.profile,
+                        _id: doc._id
+                    }
+                })
+            }
+            res.status(200).json(response);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+
 }
 
 // Handle create new data
 exports.create = async (req, res) => {
+    console.log(req.file)
     // run validate in here
     const {
         error
@@ -71,7 +63,7 @@ exports.create = async (req, res) => {
         password: hashPassword,
         phone: req.body.phone,
         address: req.body.address,
-        avatar: req.file.path
+        profile: req.file.path
     })
 
     try {
@@ -79,7 +71,8 @@ exports.create = async (req, res) => {
         res.json({
             status_code: 201,
             status_message: 'Success create new author',
-            data: saveMember
+            data: saveMember,
+            profile_url: `http://localhost:3000/uploads/${req.file.filename}`
         }, 201)
     } catch (error) {
         res.status(400).send(err)

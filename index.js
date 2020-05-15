@@ -8,6 +8,27 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+// 
+
+const multer = require("multer");
+const path = require("path");
+
+// storage engine 
+
+const storage = multer.diskStorage({
+    destination: './uploads/images',
+    filename: (req, file, cb) => {
+        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+    }
+})
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1000000
+    }
+})
+
 
 // connect mongodb
 mongoose.connect(process.env.DB_CONNECT, {
@@ -23,7 +44,6 @@ if (!db) {
 }
 
 app.use(morgan("dev"));
-app.use('/uploads', express.static('upload/images'));
 app.use(bodyParser.urlencoded({
     extended: false
 }));
@@ -43,6 +63,8 @@ app.use((req, res, next) => {
 });
 
 // Router Middleware
+// app.use('/images', express.static('upload/images'));
+app.use('/uploads', express.static('uploads'));
 app.use('/api', require('./routers/api'));
 
 // port
