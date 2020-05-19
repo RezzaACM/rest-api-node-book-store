@@ -16,7 +16,8 @@ const bookValidation = (data) => {
         stock: Joi.number(),
         available: Joi.boolean(),
         description: Joi.string().required(),
-        author: Joi.string().required()
+        author: Joi.string().required(),
+        cover: Joi.string()
     })
     return schema.validate(data)
 }
@@ -32,6 +33,19 @@ const registerValidation = (data) => {
     return schema.validate(data)
 }
 
+const orderValidation = (data) => {
+    const schema = Joi.object({
+        member: Joi.string().required(),
+        total: Joi.number().required(),
+        order: Joi.string().required(),
+        book: Joi.string().required(),
+        quantity: Joi.number().required(),
+        sub_total: Joi.number().required()
+    })
+    return schema.validate(data)
+}
+
 module.exports.authorValidation = authorValidation;
 module.exports.bookValidation = bookValidation;
 module.exports.registerValidation = registerValidation;
+module.exports.orderValidation = orderValidation;

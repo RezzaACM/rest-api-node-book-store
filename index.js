@@ -63,7 +63,6 @@ app.use((req, res, next) => {
 });
 
 // Router Middleware
-// app.use('/images', express.static('upload/images'));
 app.use('/uploads', express.static('uploads'));
 app.use('/api', require('./routers/api'));
 

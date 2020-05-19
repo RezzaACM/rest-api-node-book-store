@@ -2,8 +2,10 @@ const router = require('express').Router();
 const authorsController = require('../controllers/authorController');
 const bookController = require('../controllers/bookController');
 const memberController = require('../controllers/memberController');
+const orderController = require('../controllers/orderController');
+
+// Multer
 const path = require('path');
-const express = require('express');
 const multer = require('multer');
 
 const storage = multer.diskStorage({
@@ -42,7 +44,7 @@ router.post('/author/update/:id', authorsController.update);
 // Book route
 router.get('/books', bookController.index);
 router.get('/book/:id', bookController.detail);
-router.post('/book/create', bookController.create);
+router.post('/book/create', upload.single('cover'), bookController.create);
 router.post('/book/update/:id', bookController.update);
 router.delete('/book/delete/:id', bookController.delete);
 
@@ -50,5 +52,8 @@ router.delete('/book/delete/:id', bookController.delete);
 router.get('/members', memberController.index);
 router.post('/member/register', upload.single('profile'), memberController.create);
 
+
+// Create Order
+router.post('/order', orderController.create)
 
 module.exports = router

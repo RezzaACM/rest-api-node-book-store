@@ -23,6 +23,10 @@ const bookSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Author',
     },
+    cover: {
+        type: String,
+        required: true
+    },
     created_at: {
         type: Date,
         default: Date.now

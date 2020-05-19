@@ -56,6 +56,7 @@ exports.create = async (req, res) => {
         available: req.body.available,
         description: req.body.description,
         author: req.body.author,
+        cover: req.file.path
     });
 
     try {
